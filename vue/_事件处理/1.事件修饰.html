@@ -28,7 +28,11 @@
 
         <div class="demo1" @click="showInfo">
             <button @click.stop="showInfo">点我提示信息</button>
+            <!-- 修饰符也可以进行连用，下面的示例是即阻止冒泡的同时也阻止了默认行为 -->
+            <a href="https://www.google.com.tw" @click.prevent.stop="showInfo">谷歌台湾</a>
         </div>
+        <!-- 事件只触发一次 -->
+        <button @click.once="showInfo">点击我提示信息，只在第一次点击生效</button>
      </div>
 
      <script>
@@ -53,14 +57,15 @@
                 },
 
                 showInfo(e){
-                    alert("你好啊 Jay...")
+                    alert("你好啊 Jay...");
+                },
+
+                showMsg(msg){
+                    console.log(msg);
                 }
 
             },      
         })
-
-        
-
      </script>
 
 </body>
