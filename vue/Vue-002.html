@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DocumentData Binding</title>
+    <script type="text/javascript" src="/js/vue.js"></script>
+</head>
+<body>
+    <div id="root">
+        <!-- v-bind:value 会将name数据绑定到value属性上，这里会显示name的数据 -->
+        请输入你的名字:<input type="text" v-bind:value="name"><br>
+        请输入你的学校:<input type="text" v-model="name"><br>
+        <input v-model="message" placeholder="Type something"> 
+        <!-- v-model会将输入框的值和message数据进行双向绑定 -->
+         <!-- 用户输入的内容会实时更新到message，同时message的值发生变化也会反映到输入框中 -->
+        <!-- 当message数据发生变化的时候，视图会自动更新 -->
+        <p>Message: {{message}}</p>
+
+        <p v-bind:class="classObject">This is a paragraph</p>
+        <p :style="styleObject">This is a  paragraph with style</p>
+
+        <!-- 如果用户在该复选框中进行勾选了，则isChecked就为true 如果没有勾选则为false -->
+        <input type="checkbox" v-model="isChecked">Check me
+        <!-- 该插值语法中的值也会跟着动态实时刷新值 -->
+        <p>Checked: {{isChecked}}</p>
+
+        <!-- 单选框会根据用户所勾选的选项进行给定value中的值 -->
+        <input type="radio" v-model="picked" value="One">One
+        <input type="radio" v-model="picked" value="Two">Two
+
+        <p>Picked: {{ picked }}</p>
+
+        <select v-model="selected">
+            <option disabled value="" >Please select one</option>
+            <option>Apple</option>
+            <option>Banana</option>
+            <option>Cherry</option>
+        </select>
+        <p>Selected: {{ selected }}</p>
+
+    </div>
+
+    <!-- 简单概述Vue的数据绑定 
+            1.单项数据绑定
+                数据从模型流向视图，这意味着模型的数据变化会影响视图，但视图的变化不会影响模型
+            2.双向数据绑定 
+                数据在模型和视图之间双向流动，视图的变化会影响到模型，模型的变化也会影响到视图 
+    -->
+
+<script type="text/javascript">
+    new Vue({
+        el: '#root',
+        data: {
+            name: 'jay',
+            message:'hello jay...',
+            isChecked:false,
+            picked:'One',
+            selected:'Apple',
+            classObject: {
+                active: true,
+                'text-danger': false
+            },  
+            // 该例子中，active类会被绑定到<p>标签上，应为active为true，text-danger为false所以不会被应用
+            styleObject:{
+                color:'red',
+                fontSize : '20px'
+
+            }
+            // styleObject中的样式会动态应用到<p>标签上
+            
+        }
+    });
+</script>
+</body>
+</html>

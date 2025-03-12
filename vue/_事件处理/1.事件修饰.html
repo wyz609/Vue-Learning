@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <title>修饰符</title>
+</head>
+<body>
+    <!-- 
+        Vue中的事件修饰符：
+                1.prevent:阻止默认事件(常用)；
+                2.stop:阻止事件冒泡(常用)；
+                3.once:事件只触发一次(常用)；
+                4.capture:使用事件的捕获模式；
+                5.self：只有event.target是当前操作的元素才触发事件；
+                6.passive: 事件的默认行为立即执行，无需等待事件回调执行完毕；
+    
+    -->
+
+    <div id="root">
+        <h1>Welcome {{ name }}</h1>
+        <!-- 使用普通js阻止默认事件 -->
+        <!-- <a href="https://www.baidu.com" id="clickMe" >点击我跳转到百度首页面</a> -->
+
+        <!-- 阻止默认事件(常用) -->
+        <a href="https://www.baidu.com" @click.prevent = "handleClick">点击我跳转到百度首页面</a>
+
+        <div class="demo1" @click="showInfo">
+            <button @click.stop="showInfo">点我提示信息</button>
+        </div>
+     </div>
+
+     <script>
+        // 当用户点击<a>标签时，默认行为是跳转到百度的首页面，使用event.preventDefault()方法阻止了这个默认行为，从而
+        // 让点击事件不再触发链接跳转，此时，控制台输出“默认事件被阻止了“
+        // document.getElementById('clickMe').addEventListener('click',function(event){
+        //     event.preventDefault();
+        //     console.log("默认事件被阻止了...");
+        // })
+        
+        new Vue({
+            el: '#root',
+            data() {
+                return {
+                    name : 'shanghai'
+                }
+            },
+
+            methods: {
+                handleClick(e){
+                    console.log(e.target);//将目标链接地址打印到控制台进行输出
+                },
+
+                showInfo(e){
+                    alert("你好啊 Jay...")
+                }
+
+            },      
+        })
+
+        
+
+     </script>
+
+</body>
+</html>

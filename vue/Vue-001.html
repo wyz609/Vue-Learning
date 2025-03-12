@@ -11,12 +11,19 @@
     <div id="app">
         <h1>{{message}}</h1>
         <h2>my name is {{name}}</h2>
-        <a v-bind:href="baidu.url">点我跳转到{{baidu.name}}</a>
+        <a v-bind:href="baidu.url">点我跳转到{{baidu.name}}</a><br>
+
+        <input type="radio" v-model="picked" value="One">One 
+        <input type="radio" v-model="picked" value="Two">Two
+
+        <p>Picked : {{picked}}</p>
+
     </div>
 
 <script type="text/javascript">
         new Vue({
             el: '#app',
+            picked:'One',
             data: {
                 message: 'Hello World!',
                 name : 'jay',

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>vue中的数据代理</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+</head>
+<body>
+
+    <!-- 
+        1.vue中的数据代理：
+            通过vm对象来代理data对象属性的操作(读/写)
+        
+        2.vue中数据代理的好处
+            更加方便的操作data中的数据
+
+        3.基本原理
+            通过Object.findePropetty()把data对象中所有属性添加到vm上
+            为每一个添加到vm上的属性，都指定一个gettet/setter.
+            在getter/setter内部去操作(读/写) data对应的属性
+
+    -->
+
+    <div id="root">
+        <h2>学校名称:{{name}}</h2>
+        <h2>学校地址: {{address}}</h2>
+    </div>
+
+    <script>
+        Vue.config.productionTip = false;
+        let data; //声明一个外部变量的data
+        //通过vm代理
+        const vm = new Vue({
+            el: '#root', //挂载Vue实例到页面上的#root元素
+            //vm._data === options.data = data
+            data() { // data是一个函数，返回一个对象，包含Vue实例的响应式数据
+                return data = { //将对象赋给外部声明的data变量
+                    name:'panyue',
+                    address : 'shanghai' 
+                }
+            },
+        });
+    </script>
+        
+</body>
+</html>
