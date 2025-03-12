@@ -5,6 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
     <title>修饰符</title>
+
+    <style>
+        *{
+            margin: 20px;
+        }
+
+        .demo1{
+            height: 100px;
+            background: deepskyblue;
+        }
+
+        .box1{
+            padding: 5px;
+            background-color: deepskyblue;
+        }
+        .box2{
+            padding: 5px;
+            background: orange;
+        }
+
+    </style>
 </head>
 <body>
     <!-- 
@@ -33,6 +54,11 @@
         </div>
         <!-- 事件只触发一次 -->
         <button @click.once="showInfo">点击我提示信息，只在第一次点击生效</button>
+
+        <div class="box1" @click.capture="showMsg(1)">
+            div1
+            <div class="box2" @click="showMsg(2)">div2</div>
+        </div>
      </div>
 
      <script>
