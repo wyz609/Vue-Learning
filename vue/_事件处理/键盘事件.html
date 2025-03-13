@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue 键盘事件</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+</head>
+<body>
+    <!-- 
+        1.Vue中常用的按键别名：
+            回车 => enter
+            删除 => delete(捕获“删除”和“退格”键)
+            退出 => esc 
+            空格 => space
+            换行 => tab(特殊，必须配合keydown去使用)
+            上 => up
+            下 => down
+            左 => left
+            右 => right
+
+        2.Vue为提供别名的按键，可以使用按键的原始的key值去绑定，但注意要转为kebab-case(短横线命名)
+
+        3.系统修饰符(用法特殊)：ctrl,alt,shift,meta
+            1.配合keyup使用:按下修饰符的同时，再按下其他键，随后释放其他键，事件才会被触发。
+            2.配合keydown的使用：正常触发事件
+
+        
+        4.也可以使用KeyCode去指定具体的按钮(不推荐)
+
+        5.Vue.Config.keyCodes 自定义键名 = 键码， 可以去定制按键别名
+    -->
+    
+    <div id="root">
+        <!-- 一般vue中键盘事件的绑定，一般用keyup(keydown) -->
+        <h1>测试Vue键盘事件</h1>
+        <input type="text" @keyup.enter="showInfo" placeholder="按下回车键提示输入">
+        <input type="text" @keyup.delete="showInfo" placeholder="退格或删除提示输入">
+        <input type="text" @keyup.esc="showInfo" placeholder="按下esc提示输入">
+        <input type="text" @keydown.tab="showInfo" placeholder="按下tab键提示输入">
+        <input type="text" @keyup.ctrl="showInfo" placeholder="按下command提示输入">
+        <input type="text" @keydown.p="showInfo" placeholder="按下p提示输入">
+        <!-- 键盘事件的修饰符也可以连用 -->
+        <input type="text" @keydown.command.g="showInfo" placeholder="按下commad和g提示输入">
+    </div>
+
+    <script type="text/javascript">
+        new Vue({
+            el:'#root',
+            methods: {
+                showInfo:function(evnet){
+                    console.log(evnet.target.value);
+                    console.log(event.key);//按下按键的名字，一般就是键值
+                }
+            },    
+        })
+    </script>
+
+</body>
+</html>

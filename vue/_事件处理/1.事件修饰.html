@@ -25,6 +25,17 @@
             background: orange;
         }
 
+        .list{
+            width: 200px;
+            height: 200px;
+            background-color: salmon;
+            overflow: auto;
+        }
+
+        .list li{
+            height: 100px;
+        }
+
     </style>
 </head>
 <body>
@@ -55,13 +66,28 @@
         <!-- 事件只触发一次 -->
         <button @click.once="showInfo">点击我提示信息，只在第一次点击生效</button>
 
+        <!-- 使用事件的捕获模式，让时间以捕获的方式来处理(先捕获，然后再进行冒泡) -->
         <div class="box1" @click.capture="showMsg(1)">
             div1
             <div class="box2" @click="showMsg(2)">div2</div>
         </div>
+
+             <!-- self 只有event.target是当前操作的元素时才会触发事件(变相阻止冒泡) -->
+     <div class="demo1" @click.self="showInfo">
+        <button @click="showInfo">点击我提示信息</button>
+     </div>
+
+     <!-- passive:事件的默认行为立即执行，无需等待事件回调执行完毕 -->
+     <!-- scroll滚动条一滚动就会触发事件 wheel鼠标滚轮事件 -->
+     <ul class="list" @scroll.passive="demo">
+        <li v-for=" item in items" :key="item.id">{{ item.name }}</li>
+     </ul>
+     
+
      </div>
 
      <script>
+        Vue.config.productionTip = false,
         // 当用户点击<a>标签时，默认行为是跳转到百度的首页面，使用event.preventDefault()方法阻止了这个默认行为，从而
         // 让点击事件不再触发链接跳转，此时，控制台输出“默认事件被阻止了“
         // document.getElementById('clickMe').addEventListener('click',function(event){
@@ -73,7 +99,16 @@
             el: '#root',
             data() {
                 return {
-                    name : 'shanghai'
+                    name : 'shanghai',
+                    items:[
+                        {
+                            id:1,name: 'Item 1'
+                        },
+                        {
+                            id:2, name: 'Item 2'
+                        },
+                    ]
+
                 }
             },
 
@@ -83,11 +118,23 @@
                 },
 
                 showInfo(e){
+
+                    e.preventDefault();//阻止a标签的默认行为
+                    e.stopPropagation();//阻止冒泡事件
+                    
                     alert("你好啊 Jay...");
                 },
 
+                /**
+                 * 事件回调函数，msg为事件回调函数的参数
+                 * @param {number} msg 事件回调函数的参数
+                 */
                 showMsg(msg){
-                    console.log(msg);
+                    console.log('Clicked on div',msg);
+                },
+
+                demo(){
+                    console.log("有点小累...")
                 }
 
             },      
