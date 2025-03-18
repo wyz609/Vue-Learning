@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>天气案例_监视简写形式</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+</head>
+<body>
+    <div id="root">
+        <h1>今天的天气真{{info}}</h1>
+        <button @click="changeWeather">点击该按钮进行切换天气状态</button><br>
+        <button @click="isHot = !isHot">点击该按钮也能进行天气状态的切换</button>
+    </div>
+
+    <script type="text/javascript">
+        Vue.config.productionTip = false;
+        const vm = new Vue({
+            el:'#root',
+            data: {
+                isHot: true
+            },
+            computed: {
+                info() {
+                    return this.isHot ? '热' : '凉爽';
+                }
+            },
+            // watch: {
+            //     isHot(newVal, oldVal) {
+            //         console.log('isHot changed from', oldVal, 'to', newVal);
+            //     }
+            // },
+            methods: {
+                changeWeather() {
+                    this.isHot = !this.isHot;
+                }
+            },
+        });
+
+        //完整的写法
+        // vm.$watch('isHot',{
+        //     deep:true,
+        //     immediate:true,
+        //     handler(newValue,preValue){
+        //         console.log(newValue,preValue);
+        //     }
+        // })
+
+
+        vm.$watch('isHot',function(newValue,preValue){
+                // this === vm
+                console.log(newValue,preValue)
+            })
+    </script>
+</body>
+</html>
+

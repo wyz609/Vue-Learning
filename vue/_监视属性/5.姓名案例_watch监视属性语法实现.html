@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <title>vue计算属性语法实现</title>
+</head>
+<body>
+    <!-- 
+        computed和watch之间的区别：
+            - computed能完成的功能，watch都可以完成
+            - watch能完成的功能，computed不一定能完成，例如：watch可以进行异步操作。
+
+        两个重要的小原则
+            - 所有被Vue管理的函数，最好写成普通函数，这样this的指向的才是vm或 组件实例对象。
+            - 所有不被Vue所管理的函数(定时器的回调函数，ajax的回调函数等,Promise的回调函数)
+            ，最好写成箭头函数  
+            这样this的指向才是vm或 组件实例对象。
+-->
+<div id="root">
+    姓:<input type="text" v-model="firstName"/>
+    <br/><br/>
+    名:<input type="text" v-model="lastName"/>
+    <br/><br/>
+    测试:<input type="text" v-model="test"/>
+    <br/><br/>
+    全名: <span>{{ fullName }}</span>
+</div>
+
+<script type="text/javascript"> 
+    new Vue({
+        el:'#root',
+        data:{
+            //data里的都是属性
+            firstName:'张',
+            lastName:'三',
+            fullName:'张-三',
+            test:'test'
+        },
+
+        watch: {
+            //这里不需要深度监视规则简写 监视firstName lastName
+            // 计算属性不能开启异步操作更新
+            // 该方法用来测试异步延迟操作，用户在输入框中输入信息后过了延迟时间才进行返回内部方法具体代码
+            firstName(newF){
+                setTimeout(() => {
+                    //继承外部作用域的this 注意此时的函数写成箭头函数(因为他并不是有vue来调用的)
+                    // 如果写成function(){}的形式 this === window， 则无法更新watch属性
+                    // 异步操作
+
+                    this.fullName =  newF + '-' + this.lastName;
+                }, 1000);
+            },
+
+            lastName(newL){
+                this.fullName = this.firstName + '-' + newL;
+            }
+        }
+    });
+</script>
+
+
+</body>
+</html>

@@ -1,21 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
-    <!-- description:
-            该类用来测试插值语法中使用v-model进行数据的双向绑定，数据随着改变而在网页中进行动态改变 
+    <!-- description: 
+            该方法用来测试计算属性中的methods方法，用来记性在方法中处理数据发生的变化 
     -->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>插值语法</title>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <title>methos语法实现</title>
 </head>
 <body>
-
     <div id="root">
         请输入你的姓:<input type="text" v-model="firstName"><br> <!-- 使用v-model指令双向绑定firstName数据 -->
         请输入你的名:<input type="text" v-model="lastName"><br>  <!-- 使用v-model指令双向绑定lastName数据 -->
         全名:
-        <span>{{firstName.slice(0.3)}} - {{lastName}}</span> <!-- 使用插值语法显示全名，这里使用了字符串的slice方法 -->
+        <!-- methods方法调用之后进行插值
+            
+            data中的数据发生变化的话，要重新解析和react类似，state一变化页面重新render
+        -->
+        <span>{{fullName()}}</span>
     </div>
 
     <script type="text/javascript">
@@ -28,9 +31,13 @@
                     lastName:'三' // 名
                 }
             },
+            methods: {
+                fullName(){
+                    return `${this.firstName.slice(0,3)} -- ${this.lastName}`
+                }
+            },
         })
 
     </script>
-    
 </body>
 </html>

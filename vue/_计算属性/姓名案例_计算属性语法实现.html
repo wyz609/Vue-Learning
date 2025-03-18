@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <title>vue计算属性语法实现</title>
+</head>
+<body>
+    <!-- Description:
+            计算属性：
+                1.定义：要用的属性不存在，要通过已有属性计算得来
+                2.原理：底层借助了Object.defineproperty方法提供的getter和setter。
+                3.get函数什么时候执行？
+                    - 初次读取时会执行一次
+                    - 当依赖的数据发生变化是会被再次调用
+                
+                4.优势： 与methods实现相比，内部有缓存机制(可以实现复用)，效率会更高，调试方便。
+                5.备注：
+                    - 计算属性最终会出现在vm上，直接读取使用即可。
+                    - 如果计算属性要被修改，必须使用set函数去响应修改，且set中要引起计算时依赖的数据发生改变。
+             
+    -->
+    <div id="root">
+        请输入你的姓:<input type="text" v-model="firstName"><br> <!-- 使用v-model指令双向绑定firstName数据 -->
+        请输入你的名:<input type="text" v-model="lastName"><br>  <!-- 使用v-model指令双向绑定lastName数据 -->
+        测试: <input type="text" v-model="test"><br>
+        全名:
+        <!-- methods方法调用之后进行插值
+            
+            data中的数据发生变化的话，要重新解析和react类似，state一变化页面重新render
+        -->
+        <span>{{ fullName}}</span>
+    </div>
+
+    <script type="text/javascript">
+        Vue.config.productionTip = false; // 阻止 vue 在启动时生成生产提示。
+        const vm = new Vue({ // 创建Vue实例
+            el:'#root', // 挂载到id为root的元素上
+            data:{ // 定义数据
+                    firstName:'张', // 姓
+                    lastName:'三', // 名
+                    test:'test'
+            },
+            // methods: {
+            //     fillName(){
+            //         return `${this.firstName.slice(0,3)} -- ${this.lastName}`
+            //     }
+            // },
+
+            //计算属性 -> 旧属性加工
+
+            computed:{
+                fullName:{
+                //    get方法的作用：当读取fullName时get就会被调用，且返回值作为fullName的值
+                // defineProperty
+                // 注意vm._data是不存在计算属性的
+                // 计算属性算完之后直接丢到viewModel实例对象上
+                    /**
+                     * Getter函数，用于计算属性fullName的值
+                     * get的调用时机：
+                     * 1.初始化读取计算属性时
+                     * 2.所依赖的数据(data中的属性)发生变化时，不改变的话直接读缓存
+                     * 3.methods方法没有缓存，读几次旧调用几次无论要用的数据是否发生变化
+                     * 
+                     * 当读取fullName时，该函数会被调用，返回值作为fullName的值
+                     * 
+                     * @returns {string} firstName和lastName的拼接字符串，中间用'--'分隔
+                     */
+                    get() {
+                        /**
+                         * 当getter函数被调用时，打印一条日志消息到控制台
+                         * 
+                         * @param {string} 消息内容
+                         * @param {object} 当前对象的引用
+                         */
+                        console.log('getter方法被调用了', this);
+                        
+                        /**
+                         * 返回firstName和lastName的拼接字符串，中间用'--'分隔
+                         * 
+                         * @returns {string} 拼接后的字符串
+                         */
+                        return this.firstName + '--' + this.lastName
+                    },
+
+                    /**
+                     * Setter函数，用于设置属性fullName的值
+                     * 
+                     * set方法什么时候被调用： 当fullName属性被修改的时候
+                     * 
+                     * @param {string} 新的fullName值
+                     */
+                    set(value) {
+                        /**
+                         * 当setter函数被调用时，打印一条日志消息到控制台
+                         * 修改计算属性所依赖的普通属性(放在data里面)
+                         * 
+                         * @param {string} 消息内容
+                         * @param {object} 当前对象的引用
+                         */
+                        console.log('setter方法被调用了', this);
+                        
+                        /**
+                         * 根据新的fullName值，更新firstName和lastName的值
+                         * 
+                         * @param {string} 新的fullName值
+                         */
+                        const [firstName, lastName] = value.split('--');
+                        this.firstName = firstName;
+                        this.lastName = lastName;
+                    }
+                }
+            }
+
+        })
+        </script>
+</body>
+</html>

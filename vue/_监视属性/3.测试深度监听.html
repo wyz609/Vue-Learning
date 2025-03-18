@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+
+    <title>测试深度监听</title>
+</head>
+<body>
+    <div id="app">
+        <h1>今天天气真的特别{{info}}</h1> <!-- 显示天气信息，info由计算属性决定 -->
+        <button @click="chanageWeather">点击我切换天气状态</button> <!-- 点击按钮调用chanageWeather方法 -->
+        <hr>
+        <h3>a的值是:{{ numbers.a }}</h3><br> <!-- 显示numbers.a的值 -->
+        <button @click="numbers.a++">点我让a加一</button> <!-- 点击按钮使numbers.a加一 -->
+        <h3>b的值是:{{ numbers.b }}</h3> <!-- 显示numbers.b的值 -->
+        <button @click="numbers.b++">点我让b加一</button> <!-- 点击按钮使numbers.b加一 -->
+
+        <h1>测试vue自身检测数据属性{{numbers.d.e}}</h1> <!-- 显示numbers.d.e的值 -->
+    </div>
+
+    <script>
+
+       const vm = new Vue({
+            el:'#app', // 挂载到id为app的元素上
+            data:{ // 定义数据
+                isHot:true, // 是否炎热，true表示炎热，false表示凉爽
+                numbers:{ // 定义一个对象，包含多个属性
+                    a:1, // 属性a
+                    b:1, // 属性b
+                    d:{ // 嵌套对象d
+                        e:2 // 属性e
+                    }
+                }
+            },
+
+            computed:{
+                info(){ // 计算属性info，根据isHot的值返回不同的天气信息
+                    return this.isHot ? '炎热' : '凉快';
+                }
+            },
+
+            methods: {
+                /**
+                 * 该方法用于切换天气的状态
+                 */
+                chanageWeather(){
+                    this.isHot = !this.isHot // 取反isHot的值
+                }
+            },
+            
+            watch: {
+                isHot:{
+                    /**
+                     * 监视isHot的变化
+                     * @param {boolean} newValue - 新的值
+                     * @param {boolean} preValue - 旧的值
+                     */
+                    handler(newValue,preValue){
+                        console.log('ishot被修改了'),
+                        console.log(`newValue: ${newValue}, preValue: ${preValue}`);
+                    }
+                },
+
+                // 检测多级结构里面的属性，深度监视
+                'numbers.a':{
+                    /**
+                     * 该方法用于监视numbers.a的变化
+                     */
+                    handler(){
+                        console.log('numbers 数组中的a发生了变化')
+                    }
+                },
+
+                // 深度监视numbers中的所有属性
+                numbers:{
+                    deep:true, // 监视多级结构的属性
+                    handler(){
+                        console.log('numbers 发生变化')
+                    }
+                }
+            }
+        })
+
+    </script>
+
+</body>
+</html>
