@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=f, initial-scale=1.0">
+    <title>基本列表</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+</head>
+<body>
+    <!-- 
+            基本列表
+                 1.用于展示列表数据
+                 2.语法： v-for = "(item,index) in xxx" :key = "yyy"
+                 3.可遍历：数组，对象，字符串(用的很少),指定次数(用的很少)
+
+            注意：在遍历列表的时候使用:key="index"可能会造成的问题：
+                - 当列表项被插入，删除或重新排序的时候，Vue.js会重新渲染整个列表，因为索引已经发生改变
+                - 如果列表具有相同的索引，但实际上那个是不同的数据，Vue.js可能会渲染错误的数据
+            这里建议使用 :key="id" 是更好的选择，因为它可以确保列表项的唯一性和正确性， :key="index" 只适用于简单的列表渲染场景，或者当列表没有唯一标识符的时候。
+
+
+            这里的具体原理是与虚拟DOM密切相关，在Vue.js中，虚拟DOM是一个轻量级的JavaScript对象，它代表了真实DOM的结构。虚拟DOM的主要作用是提高渲染效率和减少DOM操作次数
+            
+            当使用 v-for指定渲染列表时，Vue.js会创建虚拟DOM树来表示列表项。每个列表项都有一个唯一的键值(:key),用于表示数据发生变化时，Vue.js会通过以下步骤更新虚拟DOM树：
+                - diff算法：Vue.js使用diff算法来比较新旧虚拟DOM树，找出差异，以确定哪些节点需要更新。
+                - patch算法:根据diff算法的结果，Vue.js使用patch算法来更新虚拟DOM树。
+                -  渲染： 更新后的虚拟DOM树会被渲染到真实DOM中。
+            
+    -->
+    <div id="root">
+        <h1>学生信息列表</h1>
+        <ul>
+            <!-- 遍历数组 -->
+             <!-- 循环列表的方法 类似于for in 循环遍历 -->
+              <!--  :代表 v-bind 属性key让每一个li有了唯一的标识，key一定不要重复-->
+                <!-- v-for(for in // for of )可以接收到两个参数，一个是当前元素，另一个是当前元素的索引 类似于下面的person,index -->
+            <!-- p可能来自形参，也可能来自于写在data里的属性，更肯来自于计算属性 computed -->
+            <li v-for='(person,index) in persons'  :key="index" >
+                {{person.name}} - {{person.age}}
+            </li>
+        </ul>
+        <!-- 遍历对象 -->
+        <h1>汽车信息</h1>
+        <!-- 注意遍历对象的时候先收到的是每一项的属性的value，第二项是对应的键名：key -->
+        <ul v-for="(val, key) of car" :key="key">
+                <li>
+                    {{key}} - {{val}}
+                </li>
+        </ul>
+        <h2>测试遍历字符串</h2>
+        <!-- 注意在遍历字符串的时候先收到的是字符串中每一个字符，第二项是其对应的索引index -->
+        <ul v-for="(c, index) in str" :key="index"> 
+            <li>
+                {{index}} -- {{ c }}
+            </li>
+        </ul>
+        
+        <h2>遍历指定次数</h2>
+        <!-- 注意遍历指定次数的时候先收到的是number(例如5, 则number是1,2,3,4.5), 第二项是对应的index(从0开始计数) -->
+        <ul v-for="(num, index) in 10" :key="index">
+            <li>
+                {{index}} -- {{num}}
+            </li>
+        </ul>
+
+        <!-- 该示例用来演示使用 :key="index"可能会出现问题 -->
+         <!-- 如果我们使用:key='index' 作为键值的时候，这意味着每个项的键值是其在列表中的索引，当我们点击“添加新项”按钮的时候，我们会在列表中插入一个新项，因为索引已经发生了改变
+            Vue.js会重新渲染整个列表，而不是只更新添加项。这会导致一些问题 ：
+                - 如果列表项有动画或过渡效果，重新渲染整个列表会导致这些效果丢失
+                - 如果列表项有输入框或其他可编辑元素，重新渲染整个列表会导致用户输入的数据丢失。
+                所以为了解决这个问题，我们可以使用唯一的键值：
+                例如 :key = "item.id",来代替 :key="index"，这样,Vue.js就可以正确地更新新添加的项，而不是重新渲染整个列表。 
+         -->
+        <h2>使用 :key="index"可能会出现的问题</h2>
+        <ul v-for="(item, index) in list" :key="item.id">
+            <li>
+                {{item.name}} -- {{item.id}}
+            </li>
+        </ul>
+        <button @click="addItem">点击添加新项</button>
+    </div>
+
+    <script>
+        Vue.config.productionTip = false;
+        new Vue({
+            el:'#root',
+            data:{
+                persons:[
+                    {id:'001', name:'张三',age:18},
+                    {id:'002', name:'李四',age:19},
+                    {id:'003', name:'王五',age:20},
+                    {id:'004',name:'赵六',age:21},
+                ],
+                car:{
+                    name:'奥迪a8',
+                    price:'80w',
+                    color:'black'
+                },
+                list:[
+                    {id:1,name:'Item 1'},
+                    {id:2,name:'Item 2'},
+                    {id:3,name:"Item 3"}
+                ],
+
+                str:'hello'
+            },
+            methods: {
+                addItem(){
+                    this.list.splice(1,0,{id:4,name:'新项'})//在索引为1的位置插入一个新项
+                }
+            },
+        })
+    </script>
+</body>
+</html>

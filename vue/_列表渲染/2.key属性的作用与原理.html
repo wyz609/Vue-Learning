@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>key属性的作用与原理</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+</head>
+<body>
+    <!--
+                    以下是对 Vue 中 key 属性的作用及其内部实现原理的详细讲解，并以注释的方式插入到代码中：
+
+                    详细讲解：Vue 中 key 属性的作用及实现原理
+                    1. key 的作用
+                    唯一标识节点：key 是虚拟 DOM 中的一个属性，用于唯一标识每个节点。
+                    高效更新 DOM：
+                    当 Vue 更新列表时，会通过 key 来判断哪些节点需要复用、更新或重新创建。
+                    如果没有 key，Vue 会使用默认的 "就地复用" 策略，可能导致节点状态被错误复用。
+                    避免渲染问题：
+                    在列表渲染中，如果 key 使用不当（如使用数组索引 index），可能会导致一些意外的渲染问题，例如：
+                    输入框的内容被错误复用。
+                    动画效果异常。
+                    2. key 的内部实现原理
+                    虚拟 DOM 的 Diff 算法：
+                    Vue 使用虚拟 DOM 来比较新旧节点，并通过 Diff 算法高效更新真实 DOM。
+                    key 的作用是帮助 Diff 算法快速定位节点，减少不必要的 DOM 操作。
+                    Diff 算法的流程：
+                    Vue 会将新旧虚拟 DOM 中的节点一一对比。
+                    如果节点的 key 相同，Vue 会认为是同一个节点，并复用该节点。
+                    如果节点的 key 不同，Vue 会认为是不同的节点，并重新创建新的节点。
+                    没有 key 的情况：
+                    如果没有 key，Vue 会默认使用 "就地复用" 策略，即直接复用相同位置的节点，而不考虑节点内容是否变化。
+                    这可能导致一些意外的渲染问题，例如输入框的内容被错误复用。
+                    3. 示例问题
+                    正确使用 key：
+                    在代码中，key 使用了 person.id，这是一个唯一标识符，可以确保每个节点的唯一性。
+                    错误使用 key 的情况：
+                    如果将 key 设置为 index（数组索引），当列表顺序发生变化时，可能会导致节点状态被错误复用。
+                    4. 总结
+                    key 是虚拟 DOM 中的一个重要属性，用于唯一标识节点，帮助 Vue 高效更新 DOM。
+                    正确使用 key 可以避免渲染问题，提高性能。
+                    key 的值必须是唯一的，通常使用唯一标识符（如 id）
+    -->
+
+    <div id="root">
+        <h2>人员列表</h2>
+        <button @click.once="add">添加一个老刘</button>
+        <ul>
+            <!-- key唯一标识： 身份证，属性key是被vue个给征用的，并不是反应在真实dom上 -->
+            <li v-for="(person, index) in persons" :key="person.id">
+                {{person.name}} - {{person.age}}
+                <!-- 为了看到key值的不正确滥用导致的问题,我们添加一个input框 -->
+                 <input type="text">
+            </li>
+        </ul>
+    </div>
+    <script type="text/javascript">
+         Vue.config.productionTip = false;
+         new Vue({
+            el:'#root',
+            data:{
+                // 数组
+                persons:[
+                    {id:'001', name:'张三',age:18},
+                    {id:'002', name:'李四',age:19},
+                    {id:'003', name:'王五',age:20}
+                ],
+            },
+            methods: {
+                add(){
+                    // 往数组的头部添加元素
+                    this.persons.unshift({
+                        id: '004',
+                        name: '老刘',
+                        age: 30
+                    })
+                }
+            },
+         })
+    </script>
+</body>
+</html>
