@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue.set()的使用</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+</head>
+<body>
+    <div id="root">
+        <h1>学校信息</h1>
+        <h2>学校名称:{{name}}</h2>
+        <h2>学校地址:{{address}}</h2>
+        <hr/>
+        <h1>学生信息</h1>
+        <button @click.once="addSex">添加一个性别属性,默认值是男</button>
+        <h2>学生姓名:{{stu.name}}</h2>
+        <h2>学生真实年龄:{{stu.age.rage}}</h2>
+        <h2>学生对外年龄:{{stu.age.sage}}</h2>
+        <h2 v-if="stu.sex">学生性别:{{stu.sex}}</h2>
+        <h2>朋友列表</h2>
+        <ul v-for="(friend, index) in stu.friends" :key="index" >
+            <li>
+                姓名:{{friend.name}},年龄:{{friend.age}},性别:{{friend.sex}}
+            </li>
+        </ul>
+    </div>
+
+    <script type="text/javascript">
+        const vm = new Vue({
+            el: '#root',
+            data: {
+                name: '哔站大学', // 学校名称
+                address: '北京', // 学校地址
+                stu: { // 学生信息
+                    name: 'jay', // 学生姓名
+                    age: { // 学生年龄
+                        rage: 20, // 真实年龄
+                        sage: 2220 // 对外年龄
+                    },
+                    friends: [ // 学生的朋友列表
+                        {name: 'tom', age: 10, sex: '男'},
+                        {name: 'jerry', age: 11, sex: '男'},
+                        {name: 'lucy', age: 12, sex: '女'}
+                    ]
+                }
+            },
+            methods: {
+                addSex() {
+                    // 使用Vue.set()方法添加一个性别属性
+                    //这里this === vm
+                    // 利用vue.set(或者vm.$set())api能够添加的属性变为响应式属性
+                    // 注意对象不能是Vue实例，或者Vue实例的根数据对象.
+                    Vue.set(this.stu, 'sex', '男');
+                    // this.$set(this.stu, 'sex', '男');
+            }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>vue监测数据改变的原理</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+</head>
+<body>
+<!-- 
+    如何监测对象中的数据：
+        - 通过setter实现监视，且要在new Vue的时候就传入要监测的数据。
+                - 创建对象后追加的属性，Vue默认不做响应式处理
+                - 如需给后添加的属性做响应式，使用如下API：
+                    Vue.set(target,property/index,value)或
+                vm.$set(target,property/index,value)   
+-->
+
+    <div id="root">
+        <h2>学校名称:
+            {{name}}
+        </h2>
+        <h2>学校地址:
+            {{address}}
+        </h2>
+        <h2>学生信息:</h2>
+        <p>姓名: {{ stu.name }}</p>
+        <p>年龄范围: {{ stu.age.rage }} - {{ stu.age.sage }}</p>
+        <h3>朋友列表:</h3>
+        <ul>
+            <li v-for="friend in stu.friends" :key="friend.name">
+                姓名: {{ friend.name }}, 年龄: {{ friend.age }}, 性别: {{ friend.sex }}
+            </li>
+        </ul>
+        <button @click="addProperty">添加属性</button>
+        <p>新增属性测试: {{ stu.newProperty }}</p>
+    </div>
+    <script type="text/javascript">
+        const vm = new Vue({
+            el:'#root',
+            data:{
+                name:'哔站大学',
+                address:'北京',
+                stu:{
+                    name:'jay',
+                    age:{
+                        rage:12,
+                        sage:20
+                    },
+                    friends:[
+                        {name:'周冬雨',age:20,sex:'male'},
+                    ]
+                },
+            },
+            methods: {
+                addProperty() {
+                    // 使用 Vue.set 动态添加响应式属性
+                    this.$set(this.stu, 'newProperty', '这是一个新属性');
+                }
+            }
+        })
+    </script>
+</body>
+</html>

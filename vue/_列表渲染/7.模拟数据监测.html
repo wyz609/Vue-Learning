@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>模拟数据监测</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+</head>
+<body>
+    <script type="text/javascript">
+        let data ={
+            name:'哔站大学',
+            adderss:'北京'
+        }
+
+        //无限递归 调用栈炸了 内存溢出
+        //该写法为错误写法
+        // Object.defineProperty(data,'name',{
+        //     get(){
+        //         return data.name
+        //     },
+        //     set(newVal){
+        //         data.name = newVal
+        //     }
+        // })
+
+        //正确写法
+        //创建一个监视示例对象
+
+                // 定义一个Dep类，用于依赖收集和派发更新
+            class Dep {
+                constructor() {
+                    this.subscribers = []; // 存储所有依赖（观察者）
+                }
+
+                // 收集依赖
+                depend() {
+                    if (Dep.target) {
+                        this.subscribers.push(Dep.target); // 将当前的依赖（观察者）添加到订阅者列表中
+                    }
+                }
+
+                // 派发更新
+                notify() {
+                    this.subscribers.forEach(sub => sub.update()); // 调用每个依赖的更新方法
+                }
+        }
+
+        // 设置依赖
+        Dep.target = null;
+
+        const obs = new Observer(data);
+
+        // 准备一个vm实例
+
+        let vm = { };
+
+        vm._data = data = obs;
+
+
+
+        // 观察者
+        function Observer(obj){
+            //缺陷：为实现递归(对象嵌套对象就会出现问题)
+            const keys = Object.keys(obj);
+            //遍历对象当中的所有key
+            keys.forEach(key => {
+                let internalValue = obj[key];
+                //定义一个Dep类
+                const dep = new Dep();
+                Object.defineProperty(obj,key,{
+                    get(){
+                        //依赖收集
+                        dep.depend();
+                        return internalValue;
+                    },
+                    set(newVal){
+                        console.log(`${key}的值发生了改变，变为${newVal}`)
+                        internalValue = newVal;
+                        //派发更新
+                        dep.notify();
+                    }
+                })
+            })
+        }
+
+        data.name='新哔站大学';
+
+    </script>
+</body>
+</html>
