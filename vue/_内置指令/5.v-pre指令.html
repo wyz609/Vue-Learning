@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>v-pre指令</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+</head>
+<body>
+    <!-- 
+        v-pre指令：
+            作用:
+            v-pre 是 Vue 提供的一个内置指令，用于 跳过当前元素及其子元素的编译。
+            元素绑定了 v-pre 后，Vue 不会解析其中的指令、插值语法或绑定表达式，而是直接将内容原样输出到页面。
+            原理：
+            Vue 的模板编译器会解析模板中的指令和插值语法。
+            当元素绑定了 v-pre 指令时，Vue 会跳过该元素及其子元素的编译过程，从而提升性能。
+
+    -->
+    <div id="root">
+        <h2 v-pre>Vue其实很简单</h2>
+        <h2>当前的n指为:
+            {{n}}
+        </h2>
+        <button @click="n++">点我n+1</button>
+    </div>
+    <script type="text/javascript">
+        Vue.config.productionTip = false;
+        new Vue({
+            el:"#root",
+            data:{
+               n:1
+            }
+        })
+    </script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>v-once指令</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+</head>
+<body>
+    <!-- 
+        v-once指令：
+            作用：
+                1).v-once是Vue提供的一个内置指令，用于一次性地渲染元素及内容。
+                2).元素被v-once指令绑定后，只会在初始渲染时生效，之后不会随着数据的变化而重新渲染。
+            原理：
+                1).当 Vue 渲染带有 v-once 的元素时，会跳过该元素的后续更新。
+                2).该指令可以减少不必要的 DOM 更新，从而提升性能。
+    -->
+    <div id="root"> 
+        <h2 v-once>初始化n的值为：
+            {{n}}
+        </h2>
+        <h2>
+            当前n的值为：
+            {{n}}
+        </h2>
+        <button @click="n++">点我n++</button>
+    </div>
+
+    <script type="text/javascript">
+        Vue.config.productionTip = false;
+        new Vue({
+            el:'#root',
+            data:{
+                n:1
+            }
+        })
+    </script>
+</body>
+</html>
