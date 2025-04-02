@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>生命周期函数(钩子)</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+</head>
+<body>
+        <!-- 
+            生命周期
+                1.又名：生命周回调函数，生命周期函数，生命周期钩子
+                2.生命周期是什么？ ： Vue在关键的时刻帮我们调用一些特殊名称的函数
+                3.生命周期函数的名字不可更改，但函数的具体内容是程序员根据需求编写的。
+                4.生命周期函数中的this指向的是vm或组件实例对象。
+
+        -->
+
+        <div id="root">
+            <h1 v-if="a">Hello Jay</h1>
+
+            <h1 :style="{opacity}">欢迎学习Vue</h1>
+        </div>
+
+    <script type="text/javascript">
+        Vue.config.productionTip = false;
+        const vm = new Vue({
+            el: '#root',
+            data:{
+                a: true,
+                opacity: 1
+            },
+
+            methods: {
+            },
+            // mounted
+            // vue完成模板的解析并把初始真实的dom元素挂在完毕就调用mounted函数
+            // mounted函数只执行一次
+            mounted() {
+                // 关键性时刻调用对应的函数 生命周期
+                console.log('mounted');
+                const timer = setInterval(() => {
+                    // 箭头函数没有this会从外部作用域中寻找 mounted 是由 Vue管理的函数，所以该函数中的this是vm(vue实例对象)
+                    this.opacity -= 0.01;
+                    if (this.opacity <= 0) {
+                        this.opacity = 1;
+                    }
+                }, 16);
+            },
+        });
+        // 通过外部的定时器实现，不推荐
+        // setInterval(()=>{
+        //         console.log("进入定时器")
+        //         vm.opacity -= 0.01;
+        //         if (vm.opacity <= 0) {
+        //             vm.opacity = 1;
+        //         }
+        //     },16);
+    </script>
+</body>
+</html>

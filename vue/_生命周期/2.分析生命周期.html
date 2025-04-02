@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>分析生命周期</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+</head>
+<body>
+    <div id="root" :x="n">
+        <h1>当前的n值是{{ n }}</h1> <!-- 使用插值表达式显示 n 的值 -->
+        <h1 v-text="n"></h1> <!-- 使用 v-text 指令显示 n 的值 -->
+        <button @click="add">点我+1</button> <!-- 点击按钮调用 add 方法 -->
+        <button @click="bye">点我销毁vm</button> <!-- 点击按钮调用 bye 方法 -->
+    </div>
+    <script type="text/javascript">
+        Vue.config.productionTip = false; // 禁用生产环境提示
+        new Vue({
+            el:"#root",
+            // template 模板字符串只能有一个根节点
+            // template:'<div><h1>当前的n值是{{ n }}</h1>\n' +
+            //     '<button @click="add">点我+1</button></div>',
+            // 注意 template 不能作为根标签使用，可以用 fragment (Vue 3 新增，模仿 React)
+            data: {
+                n: 1 // 定义响应式数据 n
+            },
+            methods:{
+                add(){
+                    console.log('add'); // 打印日志
+                    this.n++; // 增加 n 的值
+                },
+                bye(){
+                    // 实例销毁后调用。该钩子被调用后，对应 Vue 实例的所有指令都被解绑，
+                    // 所有的(自定义)事件监听器被移除，所有的子实例也都被销毁。
+                    console.log('bye');
+                    this.$destroy(); // 销毁 Vue 实例
+                }
+            },
+            watch:{
+                n(){
+                    console.log('n变了'); // 监听 n 的变化
+                }
+            },
+            beforeCreate(){
+                console.log('beforeCreate'); // 实例初始化之前调用
+                // 此时 data 和 methods 尚未初始化
+            },
+            created(){
+                console.log('created'); // 实例初始化完成后调用
+                // 此时可以访问 data 和 methods
+            },
+            beforeMount(){
+                console.log('beforeMount'); // 在挂载之前调用
+                // 此时模板尚未渲染到页面
+            },
+            mounted(){
+                console.log('mounted'); // 实例挂载完成后调用
+                console.log(this); // 可以访问 DOM 和实例
+                // document.querySelector('h1').innerText = 'hahah'; // 示例代码
+            },
+            beforeUpdate(){
+                console.log('beforeUpdate'); // 数据更新前调用
+                // 此时数据是新的，但页面还是旧的
+            },
+            updated(){
+                console.log('updated'); // 数据更新后调用
+                // 此时数据和页面都是新的
+            },
+            beforeDestroy(){
+                // 实例销毁前调用
+                // 可以进行收尾工作，如关闭定时器、解绑事件等
+                console.log('beforeDestroy');
+                console.log(this.n);
+                // this.add(); // 即使调用更新方法，也不会触发更新钩子
+            },
+            destroyed(){
+                console.log('destroyed'); // 实例销毁后调用
+                // 此时实例的所有绑定和事件监听器都已移除
+            }
+        });
+    </script>
+</body>
+</html>
