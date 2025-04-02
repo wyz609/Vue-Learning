@@ -7,6 +7,55 @@
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
 </head>
 <body>
+    <div id="root">
+        <h1>{{ message }}</h1>
+        <button @click="updateMessage">更新消息</button>
+    </div>
     
+    <script>
+        new Vue({
+            el: '#root',
+            data: {
+                message: 'Hello, Vue!'
+            },
+            methods: {
+                updateMessage() {
+                    this.message = 'Message Updated!';
+                }
+            },
+            // beforeCreate: 在实例初始化之后、数据观测和事件配置之前调用
+            beforeCreate() {
+                console.log('beforeCreate: 实例初始化前');
+            },
+            // created: 在实例创建完成后调用，此时数据观测和事件配置已完成
+            created() {
+                console.log('created: 实例已创建');
+            },
+            // beforeMount: 在模板编译完成后、挂载到 DOM 之前调用
+            beforeMount() {
+                console.log('beforeMount: 模板编译完成，尚未挂载');
+            },
+            // mounted: 在实例挂载到 DOM 后调用
+            mounted() {
+                console.log('mounted: 实例已挂载到 DOM');
+            },
+            // beforeUpdate: 在数据更新后、DOM 重新渲染之前调用
+            beforeUpdate() {
+                console.log('beforeUpdate: 数据更新前');
+            },
+            // updated: 在数据更新并重新渲染 DOM 后调用
+            updated() {
+                console.log('updated: 数据更新完成');
+            },
+            // beforeDestroy: 在实例销毁之前调用，此时实例仍然可用
+            beforeDestroy() {
+                console.log('beforeDestroy: 实例销毁前');
+            },
+            // destroyed: 在实例销毁后调用，此时所有绑定和事件监听器都已移除
+            destroyed() {
+                console.log('destroyed: 实例已销毁');
+            }
+        });
+    </script>
 </body>
 </html>
